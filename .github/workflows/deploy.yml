@@ -52,6 +52,13 @@ jobs:
       - name: Build affected
         run: npx nx affected -t build
 
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dockview-plugin
+          path: dist/dockview-plugin
+          retention-days: 30
+
   deploy:
     name: Deploy
     needs: build
@@ -69,6 +76,12 @@ jobs:
     # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
+      - name: Download Production Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dockview-plugin
+          path: dist/dockview-plugin
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
